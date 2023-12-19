@@ -79,7 +79,23 @@ def get_highlighted_days(year, month):
 
 @app.route("/paev",methods=['GET', 'POST'])
 def paev():
-    if request.method == 'POST':
+    if request.method == 'POST' and 'tagasi' in request.form:
+        return redirect(url_for('tabel'))
+    elif request.method == 'POST' and 'delete_button' in request.form:
+        f=open("tegevus.txt","r",encoding="utf-8")
+        b=[]
+        for i in f:
+            b.append(i)
+        f.close()
+        f=open("tegevus.txt","w",encoding="utf-8")
+        for i in b:
+            g=i.strip("\n").split(":")
+            if g[0]==session["user"] and g[1]==str(session["year"]) and g[2]==str(session["month"]) and g[3]==str(session["day"]):
+                pass
+            else:
+                f.write(i)
+        f.close()
+    elif request.method == 'POST':
         b=[]
         c=0
         a= request.form['tegevus']
@@ -91,13 +107,13 @@ def paev():
         for i in b:
             g=i.strip("\n").split(":")
             if g[0]==session["user"] and g[1]==str(session["year"]) and g[2]==str(session["month"]) and g[3]==str(session["day"]):
-                f.write(i.strip("\n")+" "+a+"\n")
+                f.write(i.strip("\n")+" "+a+"<br>")
                 print(i)
                 c=1
             else:
                 f.write(i)
         if c!=1:
-            f.write("\n"+session["user"]+":"+str(session["year"])+":"+str(session["month"])+":"+str(session["day"])+":"+a)
+            f.write("\n"+session["user"]+":"+str(session["year"])+":"+str(session["month"])+":"+str(session["day"])+":"+"<br>"+a+"<br>")
 
         file=open("paevad.txt","r",encoding="utf-8")
         f.close()

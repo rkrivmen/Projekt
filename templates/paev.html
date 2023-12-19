@@ -10,17 +10,26 @@
     <p>Year: {{ year }}</p>
     <p>Month: {{ month }}</p>
     <p>Day: {{ day }}</p>
-    <p>Tegevus: {{ txt }}</p>
+    <p>Tegevus: {{ txt | safe }}</p>
     <div class="container">
         <br>
         <form action="" method="post">
-          <input type="text" placeholder="lisa tegevus" name="tegevus" value="{{
-            request.form.tegevus }}">
+            <input type="text" placeholder="lisa tegevus" name="tegevus" value="{{
+                request.form.tegevus }}">
             <input class="btn btn-default" type="submit" value="Lisa tegevus">
+            
+            {% if error %}
+                <p class="error"><strong>Error:</strong> {{ error }}</p>
+            {% endif %}
         </form>
-        {% if error %}
-          <p class="error"><strong>Error:</strong> {{ error }}
-        {% endif %}
-      </div>
+        <br>
+        <form action="" method="post">
+            <button type="submit" name="delete_button" value="Kustuta">Kustuta</button>
+        </form>
+        <br>
+        <form action="" method="post">
+            <button type="submit" name="tagasi" value="tagasi">Tagasi</button>
+        </form>
+    </div>
 </body>
 </html>
