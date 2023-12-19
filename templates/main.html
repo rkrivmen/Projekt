@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Calendar</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 10px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+        .highlight {
+            background-color: red;
+            color: white;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <button onclick="previousMonth()">Previous Month</button>
+    <span id="current-month-year"></span>
+    <button onclick="nextMonth()">Next Month</button>
+</div>
+
+<table id="calendar-table">
+    <thead>
+        <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Calendar days will be generated dynamically using JavaScript -->
+    </tbody>
+</table>
+
+<script>
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    function generateCalendar(month, year) {
+        const firstDayOfMonth = new Date(year, month, 1);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const startingDay = firstDayOfMonth.getDay();
+
+        const tableBody = document.querySelector('#calendar-table tbody');
+        tableBody.innerHTML = '';
+
+        document.getElementById('current-month-year').textContent = `${getMonthName(month)} ${year}`;
+
+ let date = 1;
+        for (let i = 0; i < 6; i++) {
+            const row = document.createElement('tr');
+
+            for (let j = 0; j < 7; j++) {
+                if (i === 0 && j < startingDay) {
+                    const cell = document.createElement('td');
+                    row.appendChild(cell);
+                } else if (date > daysInMonth) {
+                    break;
+                } else {
+                    const cell = document.createElement('td');
+                    cell.textContent = date;
+
+                    if (month === 11 && (date === 7 || date === 14 || date === 21)) {
+                        cell.classList.add('highlight');
+                    }
+
+                    const day = date; // Capture the value of 'date' for the click event handler
+                    const dayTitle = `${year}-${month + 1 < 10 ? '0' + (month + 1) : month + 1}-${day < 10 ? '0' + day : day}`;
+                    cell.addEventListener('click', () => {
+                        handleClick(year, month + 1, day); // Pass 'day' to the click event handler
+                    });
+
+                    row.appendChild(cell);
+                    date++;
+                }
+            }
+            tableBody.appendChild(row);
+        }
+    }
+
+    function handleClick(year, month, day) {
+        const selectedDate = {
+            year: year,
+            month: month,
+            day: day
+        };
+
+        fetch('/send-date', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(selectedDate)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            window.location.href = '/paev'
+        })
+        .catch(error => {
+            // Handle error
+            console.error('Error:', error);
+        });
+    }
+
+    function getMonthName(month) {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return months[month];
+    }
+
+    function previousMonth() {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        generateCalendar(currentMonth, currentYear);
+    }
+
+    function nextMonth() {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        generateCalendar(currentMonth, currentYear);
+    }
+
+    generateCalendar(currentMonth, currentYear);
+</script>
+
+</body>
+</html>
+
+
