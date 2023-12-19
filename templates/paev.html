@@ -10,6 +10,17 @@
     <p>Year: {{ year }}</p>
     <p>Month: {{ month }}</p>
     <p>Day: {{ day }}</p>
-    <!-- Additional content or formatting based on the received date data -->
+    <p>Tegevus: {{ txt }}</p>
+    <div class="container">
+        <br>
+        <form action="" method="post">
+          <input type="text" placeholder="lisa tegevus" name="tegevus" value="{{
+            request.form.tegevus }}">
+            <input class="btn btn-default" type="submit" value="Lisa tegevus">
+        </form>
+        {% if error %}
+          <p class="error"><strong>Error:</strong> {{ error }}
+        {% endif %}
+      </div>
 </body>
 </html>

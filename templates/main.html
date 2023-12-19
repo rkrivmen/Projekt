@@ -81,9 +81,7 @@
                     const cell = document.createElement('td');
                     cell.textContent = date;
 
-                    if (month === 11 && (date === 7 || date === 14 || date === 21)) {
-                        cell.classList.add('highlight');
-                    }
+                    fetchHighlightedDays(year, month);
 
                     const day = date; // Capture the value of 'date' for the click event handler
                     const dayTitle = `${year}-${month + 1 < 10 ? '0' + (month + 1) : month + 1}-${day < 10 ? '0' + day : day}`;
@@ -146,6 +144,29 @@
             currentYear++;
         }
         generateCalendar(currentMonth, currentYear);
+    }
+    function fetchHighlightedDays(year, month) {
+        fetch(`/highlighted-days/${year}/${month + 1}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Highlight days received from the backend
+                data.forEach(highlightedDay => {
+                    const cells = document.querySelectorAll('td');
+                    cells.forEach(cell => {
+                        if (parseInt(cell.textContent) === highlightedDay) {
+                            cell.classList.add('highlight');
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
     generateCalendar(currentMonth, currentYear);
