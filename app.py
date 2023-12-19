@@ -10,6 +10,7 @@ def home():
     for i in f:
         i=i.strip("\n").split(";")
         nimi[i[0]]=i[1]
+    f.close()
     error = None
     if request.method == 'POST':
         a= request.form['username']
@@ -59,6 +60,7 @@ def get_highlighted_days(year, month):
             ajad[i[0]]=osa
         else:
             ajad[i[0]]=[i[1::]]
+    f.close()
     aeg=ajad["artur"]
     for i in aeg:
         if i[0] in highlighted_days:
@@ -89,7 +91,8 @@ def paev():
         for i in b:
             g=i.strip("\n").split(":")
             if g[0]==session["user"] and g[1]==str(session["year"]) and g[2]==str(session["month"]) and g[3]==str(session["day"]):
-                f.write(i+" "+a)
+                f.write(i.strip("\n")+" "+a+"\n")
+                print(i)
                 c=1
             else:
                 f.write(i)
@@ -104,9 +107,9 @@ def paev():
     for i in f:
         i=i.strip("\n").split(":")
         if i[0]==session["user"] and i[1]==str(session["year"]) and i[2]==str(session["month"]) and i[3]==str(session["day"]):
-            f.close
+            f.close()
             return render_template('paev.html', year=session["year"], month=session["month"], day=session["day"], txt=i[4])
-    f.close
+    f.close()
     return render_template('paev.html', year=session["year"], month=session["month"], day=session["day"],txt="puudub")
 
 
