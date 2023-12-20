@@ -6,17 +6,17 @@
   </head>
   <body>
     <div class="container">
-      <h1>Please login</h1>
+      <h1>Palun Registreeri</h1>
       <br>
       <form action="" method="post">
-        <input type="text" placeholder="Username" name="username" value="{{
-          request.form.username }}">
-         <input type="password" placeholder="Password" name="password" value="{{
-          request.form.password }}">
+        <input type="text" placeholder="Usernamep" name="usernamep" value="{{
+          request.form.usernamep }}">
+         <input type="password" placeholder="Passwordp" name="passwordp" value="{{
+          request.form.passwordp }}">
         <input class="btn btn-default" type="submit" value="Login">
       </form>
-      <form action="" method="post">
-        <button type="submit" name="registreeri" value="registreeri">Registreeri</button>
+    <form action="" method="post">
+        <button type="submit" name="tagasi" value="tagasi">Tagasi</button>
     </form>
       {% if error %}
         <p class="error"><strong>Error:</strong> {{ error }}
